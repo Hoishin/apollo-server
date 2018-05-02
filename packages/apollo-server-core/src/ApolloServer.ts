@@ -39,9 +39,9 @@ const NoIntrospection = (context: ValidationContext) => ({
     if (node.name.value === '__schema' || node.name.value === '__type') {
       context.reportError(
         new GraphQLError(
-          'GraphQL introspection is not allowed by Apollo Server, but the query containted __schema or __type. To enable introspection, pass introspection: true to ApolloServer in production',
-          [node]
-        )
+          'GraphQL introspection is not allowed by Apollo Server, but the query containted __schema or __type. To enable introspection, pass enableIntrospection: true to ApolloServer in production',
+          [node],
+        ),
       );
     }
   },
@@ -140,10 +140,10 @@ export class ApolloServerBase<Request = RequestInit> {
           () => {
             this.engine.engineListeningAddress.url = require('url').resolve(
               this.engine.engineListeningAddress.url,
-              this.graphqlPath
+              this.graphqlPath,
             );
             success(this.engine.engineListeningAddress);
-          }
+          },
         );
         this.engine.on('error', fail);
         return;
@@ -179,7 +179,7 @@ export class ApolloServerBase<Request = RequestInit> {
           });
 
           success(la);
-        }
+        },
       );
     });
   }
@@ -225,7 +225,7 @@ export class ApolloServerBase<Request = RequestInit> {
       {
         server,
         path: this.graphqlPath,
-      }
+      },
     );
   }
 
@@ -234,7 +234,7 @@ export class ApolloServerBase<Request = RequestInit> {
     const { ENGINE_API_KEY, ENGINE_CONFIG } = process.env;
     if (engine === false && (ENGINE_API_KEY || ENGINE_CONFIG)) {
       console.warn(
-        'engine is set to false when creating ApolloServer but either ENGINE_CONFIG or ENGINE_API_KEY was found in the environment'
+        'engine is set to false when creating ApolloServer but either ENGINE_CONFIG or ENGINE_API_KEY was found in the environment',
       );
     }
     let ApolloEngine;
@@ -250,7 +250,7 @@ export class ApolloServerBase<Request = RequestInit> {
       }
 
       this.engine = new ApolloEngine(
-        typeof engine === 'boolean' ? undefined : engine
+        typeof engine === 'boolean' ? undefined : engine,
       );
     }
 
